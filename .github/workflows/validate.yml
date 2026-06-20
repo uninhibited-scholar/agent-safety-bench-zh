@@ -1,0 +1,15 @@
+name: validate-bench
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Validate benchmark
+        run: python3 scripts/check_bench.py
+      - name: Rule baseline + score (smoke)
+        run: |
+          python3 baselines/rules_baseline.py
+          python3 scripts/score.py baselines/predictions_rules.jsonl
