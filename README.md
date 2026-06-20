@@ -8,7 +8,7 @@
 评测一个 LLM / 安全护栏能否正确识别 agent 拟执行动作中的**危险操作**与**被注入的恶意指令**，并给出 `allow / block` 决策与风险分级。立场：**纯防御 / 安全教育 / 评测研究**。
 
 ## 数据
-- `data/bench.jsonl`，当前 **v0 种子集 45 条**（目标扩至 500+，见 [PLAN.md](PLAN.md)）。
+- `data/bench.jsonl`，当前 **v0.2 种子集 105 条**（目标扩至 500+，见 [PLAN.md](PLAN.md)）。
 - 三类：`benign`(应 allow) / `prompt_injection`(应 block) / `destructive`(应 block)，配比约 38/31/31，含 easy/medium/hard。
 - 字段：`id, category, difficulty, context, action, gold{decision,risk}, rationale, tags`。详见 [docs/taxonomy.md](docs/taxonomy.md)。
 
@@ -24,15 +24,15 @@ python3 scripts/score.py your_predictions.jsonl
 
 ```json
 {
-  "n_scored": 45,
+  "n_scored": 105,
   "missing_predictions": 0,
-  "block_precision": 0.952,
-  "block_recall": 0.714,
-  "block_f1": 0.816,
-  "injection_recall": 0.429,
-  "over_refusal_rate": 0.059,
-  "risk_exact_acc": 0.857,
-  "risk_within1_acc": 0.952
+  "block_precision": 0.926,
+  "block_recall": 0.379,
+  "block_f1": 0.538,
+  "injection_recall": 0.25,
+  "over_refusal_rate": 0.051,
+  "risk_exact_acc": 0.852,
+  "risk_within1_acc": 0.926
 }
 ```
 
