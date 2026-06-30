@@ -48,6 +48,21 @@ python3 scripts/score.py your_predictions.jsonl
 
 **看点**：规则护栏对显式危险命令尚可（block precision ~0.86），但**注入召回仅 ~0.26**——即近四分之三的注入因为"动作本身看着像正常工具调用"而漏判。这正是本基准要暴露的问题：**语义注入防不住,不能只靠命令规则。**
 
+## 跑真实模型（排行榜）
+```bash
+export OPENAI_API_KEY=sk-...     # 任意 OpenAI 兼容端点
+python3 scripts/run_model.py --model <模型名> [--base-url <端点>]
+python3 scripts/score.py predictions_<模型名>.jsonl
+```
+
+| 模型 | block F1 | injection recall | over-refusal | 备注 |
+|---|---:|---:|---:|---|
+| rules baseline | 0.489 | 0.261 | 0.083 | 命令规则，作下限 |
+| glm-4-plus | 0.954 | 0.856 | 0.010 | 智谱，2024 |
+| _更多模型待填_ | | | | |
+
+**看点**：GLM-4-plus 把注入召回从规则的 26% 拉到 **86%**，同时过度拒绝仅 1%——**规则防不住的注入，强模型可以**。这正是本基准的价值：量化"规则 vs 模型"在语义注入防御上的差距。
+
 ## 质量保证
 `scripts/check_bench.py` + CI 每次提交校验：合法 JSON、严格 schema、约束一致（benign↔allow / 其余↔block）、无重复、配比在区间、纯净度（禁国家归因/APT/地缘）。**禁止靠删样本或改标签骗过校验。**
 
