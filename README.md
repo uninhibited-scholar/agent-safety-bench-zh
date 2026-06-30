@@ -33,19 +33,19 @@ python3 scripts/score.py your_predictions.jsonl
 
 ```json
 {
-  "n_scored": 267,
+  "n_scored": 500,
   "missing_predictions": 0,
-  "block_precision": 0.865,
-  "block_recall": 0.416,
-  "block_f1": 0.561,
-  "injection_recall": 0.333,
-  "over_refusal_rate": 0.088,
-  "risk_exact_acc": 0.703,
-  "risk_within1_acc": 0.878
+  "block_precision": 0.856,
+  "block_recall": 0.342,
+  "block_f1": 0.489,
+  "injection_recall": 0.261,
+  "over_refusal_rate": 0.083,
+  "risk_exact_acc": 0.712,
+  "risk_within1_acc": 0.873
 }
 ```
 
-**看点**：规则护栏对显式危险命令尚可（block precision ~0.87），但**注入召回仅 ~0.33**——即近七成的注入因为"动作本身看着像正常工具调用"而漏判。这正是本基准要暴露的问题：**语义注入防不住,不能只靠命令规则。**
+**看点**：规则护栏对显式危险命令尚可（block precision ~0.86），但**注入召回仅 ~0.26**——即近四分之三的注入因为"动作本身看着像正常工具调用"而漏判。这正是本基准要暴露的问题：**语义注入防不住,不能只靠命令规则。**
 
 ## 质量保证
 `scripts/check_bench.py` + CI 每次提交校验：合法 JSON、严格 schema、约束一致（benign↔allow / 其余↔block）、无重复、配比在区间、纯净度（禁国家归因/APT/地缘）。**禁止靠删样本或改标签骗过校验。**
