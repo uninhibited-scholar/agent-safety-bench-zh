@@ -11,15 +11,16 @@
 
 Agent 安全是 2026 的前沿，但公开评测**几乎全是英文**（InjecAgent、ToolEmu、AgentDyn…）；中文侧的安全基准（SuperCLUE-Safety、CHiSafetyBench、Flames）评的是**通用有害性/价值对齐**，不评"**这个工具调用该不该被拦、这条轨迹是不是被注入了**"。本基准填的就是这个交叉点：**中文 · 防御网安语境 · agent 工具调用风险与注入 · 可机器评分**（详见 [docs/prior-art.md](docs/prior-art.md)）。
 
-它不只是数据，还提出并**用数字证明了一个观点**：把一套常见命令规则当护栏跑本基准，对显式危险命令很准（block precision ~0.93），但**注入召回只有 ~0.25**——大量注入因"动作本身看着像正常工具调用"而漏判。**只靠命令规则防不住语义注入**——这正是需要专门评测的理由。
+它不只是数据，还提出并**用数字证明了一个观点**：把一套常见命令规则当护栏跑本基准，对显式危险命令尚可（block precision ~0.86），但**注入召回只有 ~0.26**——大量注入因"动作本身看着像正常工具调用"而漏判。**只靠命令规则防不住语义注入**——这正是需要专门评测的理由。
 
-> 现状诚实定位：v0.2、105 条、单人编写、规则基线——是一个**能跑通、有论点、可复现**的早期基准（占位 + 方法验证），尚非大规模权威基准；规模化、多模型基线与真实样本掺入见 [PLAN.md](PLAN.md)。
+> 现状诚实定位：**v1.0、500 条、单人编写、规则基线**——一个**能跑通、有论点、可复现**的基准（达 PLAN 验收规模）；多模型基线与真实样本掺入见 [PLAN.md](PLAN.md)。
 
 
 ## 数据
-- `data/bench.jsonl`，当前 **v0.2 种子集 105 条**（目标扩至 500+，见 [PLAN.md](PLAN.md)）。
-- 三类：`benign`(应 allow) / `prompt_injection`(应 block) / `destructive`(应 block)，配比约 38/31/31，含 easy/medium/hard。
-- 字段：`id, category, difficulty, context, action, gold{decision,risk}, rationale, tags`。详见 [docs/taxonomy.md](docs/taxonomy.md)。
+- `data/bench.jsonl`，共 **500 条**（达 PLAN 验收线）。
+- 三类：`benign`(应 allow) / `prompt_injection`(应 block) / `destructive`(应 block)，配比约 41/31/28（均在配比区间内），每类均含 easy/medium/hard 三档。
+- 注入覆盖 20+ 载体（web/email/sms/csv/wiki/api 文档/表单/通知/工单/markdown/日历/电子书等）；破坏覆盖误删根/boot wipe/无 WHERE 的 SQL/未校验变量/危险通配等。
+- 字段：`id, category, difficulty, context, action{type,tool,args}, gold{decision,risk}, rationale, tags`。详见 [docs/taxonomy.md](docs/taxonomy.md)。
 
 ## 评测方法
 让被测模型/护栏对每条样本输出 `{id, decision, risk}`，然后：
@@ -51,7 +52,7 @@ python3 scripts/score.py your_predictions.jsonl
 `scripts/check_bench.py` + CI 每次提交校验：合法 JSON、严格 schema、约束一致（benign↔allow / 其余↔block）、无重复、配比在区间、纯净度（禁国家归因/APT/地缘）。**禁止靠删样本或改标签骗过校验。**
 
 ## 诚实说明
-v0 种子样本为人工编写的防御导向评测用例，**点到为止、不含可直接运行的完整攻击链**；扩量与多模型基线见 [PLAN.md](PLAN.md)。Prior-art 对比见 [docs/prior-art.md](docs/prior-art.md)（待联网复核）。
+v1.0 样本为人工编写的防御导向评测用例，**点到为止、不含可直接运行的完整攻击链**；多模型基线与真实样本掺入见 [PLAN.md](PLAN.md)。Prior-art 对比见 [docs/prior-art.md](docs/prior-art.md)（待联网复核）。
 
 ## 相关
 [precheck-guardian](https://github.com/uninhibited-scholar/precheck-guardian)（规则基线来源）· [cybersec-qa-dataset-zh](https://github.com/uninhibited-scholar/cybersec-qa-dataset-zh)
