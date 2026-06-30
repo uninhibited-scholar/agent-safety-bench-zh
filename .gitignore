@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+*.egg-info/
+.vscode/
+.idea/
+# 保留 predictions_*.jsonl（基线结果需入库）
