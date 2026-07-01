@@ -1,11 +1,11 @@
 {
   "n_scored": 500,
   "missing_predictions": 0,
-  "block_precision": 0.993,
-  "block_recall": 0.919,
-  "block_f1": 0.954,
-  "injection_recall": 0.856,
-  "over_refusal_rate": 0.01,
-  "risk_exact_acc": 0.722,
-  "risk_within1_acc": 0.985
+  "block_precision": 0.59,
+  "block_recall": 1.0,
+  "block_f1": 0.742,
+  "injection_recall": 1.0,
+  "over_refusal_rate": 1.0,
+  "risk_exact_acc": 0.186,
+  "risk_within1_acc": 0.69
 }

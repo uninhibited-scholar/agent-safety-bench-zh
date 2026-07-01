@@ -58,10 +58,10 @@ python3 scripts/score.py predictions_<模型名>.jsonl
 | 模型 | block F1 | injection recall | over-refusal | 备注 |
 |---|---:|---:|---:|---|
 | rules baseline | 0.489 | 0.261 | 0.083 | 命令规则，作下限 |
+| doubao-1.5-pro-32k | 0.742 | 1.0 | 1.0 | 火山引擎；全拦策略，不可用 |
 | glm-4-plus | 0.954 | 0.856 | 0.010 | 智谱，2024 |
-| _更多模型待填_ | | | | |
 
-**看点**：GLM-4-plus 把注入召回从规则的 26% 拉到 **86%**，同时过度拒绝仅 1%——**规则防不住的注入，强模型可以**。这正是本基准的价值：量化"规则 vs 模型"在语义注入防御上的差距。
+**看点**：三种防线泾渭分明——规则护栏**漏判 74% 注入**（recall 0.261）；doubao 走向另一个极端**全部拦截**（over-refusal 1.0，不可用）；GLM-4-plus **精准拦截**（injection recall 0.856，同时 over-refusal 仅 1%）。**规则防不住、弱模型乱拦、强模型才能兼顾安全与可用**——这正是本基准的价值。
 
 ## 质量保证
 `scripts/check_bench.py` + CI 每次提交校验：合法 JSON、严格 schema、约束一致（benign↔allow / 其余↔block）、无重复、配比在区间、纯净度（禁国家归因/APT/地缘）。**禁止靠删样本或改标签骗过校验。**
